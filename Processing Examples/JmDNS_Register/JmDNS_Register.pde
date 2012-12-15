@@ -10,6 +10,8 @@ import com.strangeberry.jmdns.tools.*;
 
 
 String REMOTE_TYPE = "_myProject._tcp.local.";
+String REMOTE_PROPERTY_ID = "DevName";
+String PROJECT_NAME = "MyGreatProject";
 JmDNS jmdns = null;
 ServiceInfo pairservice = null;
 boolean advertising = false;
@@ -44,7 +46,7 @@ void setup() {
   println("Opened JmDNS!");
   random = new Random();
   id = random.nextInt(100000);
-  println("\nPress r to register Itunes Remote service 'Android-'" + id);
+  println("\nPress r to register Itunes Remote service "+ PROJECT_NAME + " " + id);
   println("Press q to quit");
 
 }
@@ -54,7 +56,7 @@ void draw() {
 
   if ((!advertising) && (shouldBeAdvertising)) {
     final HashMap<String, String> values = new HashMap<String, String>();
-    values.put("DvNm", "Android-" + id);
+    values.put(REMOTE_PROPERTY_ID, "MyGreatProject-" + id);
 //    values.put("RemV", "10000");
 //    values.put("DvTy", "iPod");
 //    values.put("RemN", "Remote");
@@ -82,7 +84,7 @@ void draw() {
 
   if ((advertising) && (!shouldBeAdvertising)) {
     advertising = false;
-    println("Closing JmDNS...");
+    println("Closing JmDNS Registered Service...");
       try {
         jmdns.unregisterService(pairservice);
         jmdns.unregisterAllServices();
@@ -93,7 +95,7 @@ void draw() {
       }
       catch (NullPointerException e) {
       }
-    println("Done!");
+    println("JmDNS Registered Service Closed!");
     System.exit(0);
   }
 }
