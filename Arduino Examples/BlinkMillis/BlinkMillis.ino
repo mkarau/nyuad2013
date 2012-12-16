@@ -11,7 +11,7 @@ int ledPin = 13;
 
 boolean ledOnState = true;
 unsigned long lastLEDBlinkMillis = 0;
-unsigned long LEDBlinkIntervalMillis = 1000000;
+unsigned long LEDBlinkIntervalMillis = 1000;
 
 // the setup routine runs once when you press reset:
 void setup() {                
@@ -21,6 +21,9 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
+  
+  // Keep track of State
+  
   // Check to see if it's time to blink the LED.
   // If not, do nothing.
   if ((unsigned long)(millis() - lastLEDBlinkMillis) > LEDBlinkIntervalMillis) {
@@ -28,6 +31,9 @@ void loop() {
     ledOnState = !ledOnState;      // Toggle the state of the LED.
   }
 
+
+  // Actions
+ 
   if (ledOnState) {
     digitalWrite(ledPin, HIGH);   // turn the LED on (HIGH is the voltage level)
   } 
