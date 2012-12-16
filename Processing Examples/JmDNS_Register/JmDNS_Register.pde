@@ -15,25 +15,28 @@ String PROJECT_NAME = "MyGreatProject";
 JmDNS jmdns = null;
 ServiceInfo pairservice = null;
 boolean advertising = false;
-boolean shouldBeAdvertising = false;
+boolean shouldBeAdvertising = true;
+
+boolean shouldQuit = false;
 int id;
 Random random;
+long lastAdvertisementMillis = 0;
+long advertisementIntervalMillis = 2000;
+
 
 void keyPressed() {
   if (key == 'r') {
-    if (!advertising) {
-      shouldBeAdvertising = true;
-    }
+      shouldBeAdvertising = !shouldBeAdvertising;
   }
 
   if (key == 'q') {    
-    advertising = true;
     shouldBeAdvertising = false;
+    shouldQuit = true;
   }
 }
 
 void setup() {
-  size(100, 100);
+  size(400, 100);
 
   println("Opening JmDNS...");
   try {
@@ -53,8 +56,13 @@ void setup() {
 
 void draw() {
 
-
-  if ((!advertising) && (shouldBeAdvertising)) {
+  if (advertising) {
+    background(0,255,0,50);
+  } else {
+    background(255,0,0,50);
+  }
+  if ((!advertising && shouldBeAdvertising) && (millis() - lastAdvertisementMillis) > advertisementIntervalMillis) {
+    lastAdvertisementMillis = millis();
     final HashMap<String, String> values = new HashMap<String, String>();
     values.put(REMOTE_PROPERTY_ID, "MyGreatProject-" + id);
 //    values.put("RemV", "10000");
@@ -81,13 +89,21 @@ void draw() {
     advertising = true;
   }
 
-
-  if ((advertising) && (!shouldBeAdvertising)) {
-    advertising = false;
+  if (advertising && !shouldBeAdvertising) {
     println("Closing JmDNS Registered Service...");
       try {
         jmdns.unregisterService(pairservice);
         jmdns.unregisterAllServices();
+      }
+      catch (NullPointerException e) {
+      }
+    println("JmDNS Registered Service Closed!");
+    advertising = false;
+  }
+  
+  if (shouldQuit && !advertising){
+    println("Killing JmDNS...");
+      try {
         jmdns.close();
       }
       catch (IOException e) {
@@ -95,7 +111,7 @@ void draw() {
       }
       catch (NullPointerException e) {
       }
-    println("JmDNS Registered Service Closed!");
+    println("JmDNS Closed!");
     System.exit(0);
   }
 }
