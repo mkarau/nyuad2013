@@ -65,6 +65,7 @@ void draw() {
     lastAdvertisementMillis = millis();
     final HashMap<String, String> values = new HashMap<String, String>();
     values.put(REMOTE_PROPERTY_ID, "MyGreatProject-" + id);
+    values.put("PortName", "/dev/tty.usbSerial.fudge");
 //    values.put("RemV", "10000");
 //    values.put("DvTy", "iPod");
 //    values.put("RemN", "Remote");
